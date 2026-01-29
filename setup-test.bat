@@ -2224,62 +2224,17 @@ echo Scripts section complete >> "!LOGFILE!"
 :: ===================================================================
 :: FINAL SUMMARY
 :: ===================================================================
-
 echo:
 echo =========================================
 echo COMPREHENSIVE VAULT SETUP COMPLETE!
 echo =========================================
-echo:
 echo:
 echo Location: !ROOT!
 echo Log file: !LOGFILE!
 echo:
 echo [FINISHED SUCCESSFULLY] >> "!LOGFILE!"
 echo Timestamp: %date% %time% >> "!LOGFILE!"
-echo:
-echo:
-echo Location: !ROOT!
-echo:
-echo What was created:
-echo:
-echo Core Files:
-echo   - 6 Dashboard ^& hub pages
-echo   - Configuration files (package.json, tsconfig.json)
-echo   - README.md
-echo:
-echo AI Skills:
-echo   - 5 Coding skills (generate, debug, refactor, explain, review, optimize)
-echo   - 3 Writing skills (article, social post, edit)
-echo   - 2 Productivity skills (meeting notes, task breakdown)
-echo:
-echo Prompts:
-echo   - 5 Prompt templates (code review, brainstorm, research, learning, decisions)
-echo:
-echo Templates:
-echo   - 6 Entity templates (project, meeting, goal, daily, person, area)
-echo:
-echo Scripts:
-echo   - 3 TypeScript automation scripts
-echo   - 3 BAT runners
-echo   - 1 Enhanced config file
-echo:
-echo Sample Content:
-echo   - 3 Area examples (Career, Health, Learning)
-echo:
-echo Total Files: 40+ comprehensive templates and tools
-echo:
-echo =========================================
-echo Next Steps:
-echo =========================================
-echo:
-echo 1. Open "!ROOT!" in Obsidian
-echo 2. Start with [[Dashboard]]
-echo 3. Configure project-config.json with your projects
-echo 4. Run setup-week to create this week's notes
-echo 5. Explore skills in 000 OS/AI/skills/
-echo:
-echo =========================================
-echo:
+
 echo Press any key to close...
 pause > nul
 endlocal

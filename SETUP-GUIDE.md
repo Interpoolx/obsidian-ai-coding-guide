@@ -34,10 +34,12 @@ At the root of your vault, you should have:
 - `🔗 Quick Links.md`: Key documents and resources.
 
 ## 5. AI Integration
-To use this with AI (like Claude Code):
+To use this with AI:
 - Keep your AI logs in `210 AI Log/`.
 - Use the prompts stored in `400 Resources/Prompt Library/`.
 - Use the automation scripts in `000 OS/AI/scripts/`.
+- Use the universal skills in `000 OS/AI/skills/`.
+- **Note**: `package.json` and `tsconfig.json` are at the vault root for IDE support.
 
 ---
 *Based on the guide by [Chase Adams](https://curiouslychase.com/posts/ai-native-obsidian-vault-setup-guide/).*

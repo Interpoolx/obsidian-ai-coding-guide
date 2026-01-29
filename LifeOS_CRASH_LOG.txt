@@ -1,0 +1,46 @@
+=== LifeOS Debug Session Started: 29-01-2026 15:12:08.03 === 
+Current Directory: D:\react-projects\obsidian-ai-coding-guide 
+User: respo 
+Detected: "D:\react-projects\obsidian-ai-coding-guide" 
+User input: "D:\" 
+FINAL ROOT PATH: "D:\LifeOS" 
+[1/6] Starting folder creation 
+Creating root... 
+Creating 000 OS structure... 
+000 OS folders done 
+Creating 100 Periodics... 
+100 Periodics done 
+[1/6] Complete 
+[2/6] Starting Core Files 
+Creating Dashboard.md... 
+Dashboard.md OK 
+Creating North Star.md... 
+North Star.md OK 
+Creating Quick Links.md... 
+Quick Links.md OK 
+Creating Coding Projects.md... 
+Creating Writing Hub.md... 
+Creating package.json... 
+Creating tsconfig.json... 
+Creating README.md... 
+[2/6] Complete 
+[3/6] Starting Coding Skills 
+CDIR set to: D:\LifeOS\000 OS\AI\skills\coding 
+generate-code.md OK 
+[3/6] Complete 
+[4/6] Starting Writing Skills 
+WDIR: D:\LifeOS\000 OS\AI\skills\writing 
+PDIR: D:\LifeOS\000 OS\AI\skills\productivity 
+[4/6] Complete 
+[5/6] Starting Prompts 
+PROMPTS dir: D:\LifeOS\000 OS\AI\prompts 
+[5/6] Complete 
+[6/6] Starting Templates 
+TEMPLATES dir: D:\LifeOS\000 OS\Templates 
+[6/6] Complete 
+Starting Scripts Section 
+SCRIPTS_DIR debug 
+SCRIPTS_DIR: D:\LifeOS\000 OS\AI\scripts 
+Scripts section complete 
+[FINISHED SUCCESSFULLY] 
+Timestamp: 29-01-2026 15:12:46.45 
