@@ -1,0 +1,74 @@
+graph TB
+    subgraph "Your Actual Projects"
+        P1[C:\projects\web-app]
+        P2[C:\projects\data-pipeline]
+        P3[C:\projects\mobile-app]
+    end
+    
+    subgraph "LifeOS Vault"
+        Config[project-config.json]
+        
+        subgraph "Scripts"
+            Sync[sync-projects.ts]
+            Summary[generate-summaries.ts]
+            Week[setup-week.ts]
+        end
+        
+        subgraph "Project Notes"
+            N1[MyWebApp.md]
+            N2[DataPipeline.md]
+            N3[MobileApp.md]
+        end
+        
+        subgraph "_synced Folder"
+            S1[MyWebApp/README.md]
+            S2[MyWebApp/PRD.md]
+            S3[DataPipeline/README.md]
+            S4[MobileApp/README.md]
+        end
+        
+        subgraph "Dashboards"
+            Main[📊 Dashboard.md]
+            Coding[📁 Coding Projects.md]
+            Summaries[Coding Project Summaries.md]
+        end
+    end
+    
+    %% Connections
+    P1 -->|reads| Config
+    P2 -->|reads| Config
+    P3 -->|reads| Config
+    
+    Config -->|drives| Sync
+    
+    Sync -->|copies files| S1
+    Sync -->|copies files| S2
+    Sync -->|copies files| S3
+    Sync -->|copies files| S4
+    
+    Sync -->|creates if missing| N1
+    Sync -->|creates if missing| N2
+    Sync -->|creates if missing| N3
+    
+    N1 -->|links to| S1
+    N1 -->|links to| S2
+    N2 -->|links to| S3
+    N3 -->|links to| S4
+    
+    N1 -->|aggregated by| Summary
+    N2 -->|aggregated by| Summary
+    N3 -->|aggregated by| Summary
+    
+    Summary -->|generates| Summaries
+    
+    Coding -->|lists via Dataview| N1
+    Coding -->|lists via Dataview| N2
+    Coding -->|lists via Dataview| N3
+    
+    Main -->|links to| Coding
+    
+    style Config fill:#ffd700
+    style Sync fill:#90EE90
+    style Summary fill:#90EE90
+    style Main fill:#87CEEB
+    style Coding fill:#87CEEB
