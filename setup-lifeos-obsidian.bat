@@ -336,7 +336,7 @@ echo   ]
 echo }
 ) > "%ROOT%\000 OS\AI\scripts\project-config.json"
 
-:: setup-week.ts (FIXED escaping)
+:: setup-week.ts
 (
 echo // setup-week.ts - Create weekly + daily notes
 echo import { existsSync, mkdirSync, writeFileSync } from "node:fs";
@@ -406,7 +406,7 @@ echo   }
 echo }
 ) > "%ROOT%\000 OS\AI\scripts\setup-week.ts"
 
-:: sync-projects.ts - NEW: Sync external project files
+:: sync-projects.ts
 (
 echo // sync-projects.ts - Sync external project files into vault
 echo import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from "node:fs";
@@ -490,9 +490,9 @@ echo.
 echo console.log^("\n✓ Sync complete!"^);
 ) > "%ROOT%\000 OS\AI\scripts\sync-projects.ts"
 
-:: generate-coding-summaries.ts (FIXED)
+:: generate-coding-summaries.ts
 (
-echo // generate-coding-summaries.ts
+echo // generate-coding-summaries.ts - Generate overview of all coding projects
 echo import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from "node:fs";
 echo import { join, dirname } from "node:path";
 echo import { fileURLToPath } from "node:url";
@@ -502,47 +502,232 @@ echo const VAULT = join^(__dirname, "../../../"^);
 echo const projectsDir = join^(VAULT, "300 Entities/Projects/Coding"^);
 echo const output = join^(VAULT, "200 Notes/Coding Project Summaries.md"^);
 echo.
-echo let md = "# Coding Projects Overview\n\nGenerated: " + new Date^(^).toISOString^(^) + "\n\n";
+echo const colors = {
+echo   reset: "\x1b[0m",
+echo   green: "\x1b[32m",
+echo   blue: "\x1b[34m",
+echo   cyan: "\x1b[36m",
+echo   yellow: "\x1b[33m"
+echo };
 echo.
-echo const files = readdirSync^(projectsDir^).filter^(f =^> f.endsWith^(".md"^)^);
+echo function log^(message: string, color: keyof typeof colors = "reset"^) {
+echo   console.log^(`${colors[color]}${message}${colors.reset}`^);
+echo }
+echo.
+echo interface ProjectInfo {
+echo   name: string;
+echo   status?: string;
+echo   language?: string;
+echo   externalPath?: string;
+echo   summary?: string;
+echo   tasks: string[];
+echo   lastModified: Date;
+echo }
+echo.
+echo log^("\n" + "=".repeat^(60^), "cyan"^);
+echo log^("📊 GENERATING PROJECT SUMMARIES", "cyan"^);
+echo log^("=".repeat^(60^) + "\n", "cyan"^);
+echo.
+echo if ^(!existsSync^(projectsDir^)^) {
+echo   log^("❌ Projects directory not found!", "yellow"^);
+echo   log^("Expected: " + projectsDir + "\n"^);
+echo   process.exit^(1^);
+echo }
+echo.
+echo const projects: ProjectInfo[] = [];
+echo const files = readdirSync^(projectsDir^);
 echo.
 echo for ^(const file of files^) {
+echo   if ^(!file.endsWith^(".md"^)^) continue;
+echo   
 echo   const path = join^(projectsDir, file^);
-echo   if ^(statSync^(path^).isDirectory^(^)^) continue;
+echo   const stats = statSync^(path^);
+echo   
+echo   // Skip directories ^(like _synced^)
+echo   if ^(stats.isDirectory^(^)^) continue;
 echo   
 echo   const content = readFileSync^(path, "utf-8"^);
 echo   const name = file.replace^(".md", ""^);
 echo   
-echo   md += `## ${name}\n`;
+echo   log^(`Processing: ${name}`, "blue"^);
+echo   
+echo   const projectInfo: ProjectInfo = {
+echo     name,
+echo     tasks: [],
+echo     lastModified: stats.mtime
+echo   };
 echo   
 echo   // Extract frontmatter
 echo   const frontmatterMatch = content.match^(/^---\n^([\s\S]*?^)\n---/^);
 echo   if ^(frontmatterMatch^) {
 echo     const fm = frontmatterMatch[1];
-echo     const status = fm.match^(/status:\s*^(.+^)/^)?.[1]?.trim^(^);
-echo     const language = fm.match^(/language:\s*^(.+^)/^)?.[1]?.trim^(^);
-echo     if ^(status^) md += `**Status:** ${status}\n`;
-echo     if ^(language^) md += `**Language:** ${language}\n`;
+echo     projectInfo.status = fm.match^(/status:\s*^(.+^)/^)?.[1]?.trim^(^);
+echo     projectInfo.language = fm.match^(/language:\s*^(.+^)/^)?.[1]?.trim^(^);
+echo     projectInfo.externalPath = fm.match^(/external_path:\s*^(.+^)/^)?.[1]?.trim^(^);
 echo   }
 echo   
 echo   // Extract summary section
-echo   const summary = content.match^(/## Summary\s*\n^([\s\S]*?^)^(?=\n##^|\n---^|$^)/^);
-echo   if ^(summary^) {
-echo     md += `\n${summary[1].trim^(^)}\n\n`;
+echo   const summaryMatch = content.match^(/## Summary\s*\n^([\s\S]*?^)^(?=\n##^|\n---^|\z^)/^);
+echo   if ^(summaryMatch^) {
+echo     projectInfo.summary = summaryMatch[1].trim^(^);
 echo   }
 echo   
-echo   // Extract open tasks
+echo   // Extract all incomplete tasks
 echo   const taskMatches = [...content.matchAll^(/- \[ \] ^(.+^)/g^)];
-echo   if ^(taskMatches.length ^> 0^) {
-echo     md += `**Open Tasks:** ${taskMatches.length}\n`;
-echo     taskMatches.slice^(0, 3^).forEach^(m =^> md += `- ${m[1]}\n`^);
-echo   }
+echo   projectInfo.tasks = taskMatches.map^(m =^> m[1]^);
 echo   
-echo   md += "\n---\n\n";
+echo   projects.push^(projectInfo^);
 echo }
 echo.
+echo // Sort by last modified
+echo projects.sort^(^(a, b^) =^> b.lastModified.getTime^(^) - a.lastModified.getTime^(^)^);
+echo.
+echo // Generate markdown
+echo let md = `---
+echo type: summary
+echo generated: ${new Date^(^).toISOString^(^)}
+echo ---
+echo # 📊 Coding Projects Overview
+echo.
+echo **Generated:** ${new Date^(^).toLocaleString^(^)}
+echo **Total Projects:** ${projects.length}
+echo.
+echo ---
+echo.
+echo `;
+echo.
+echo // Summary statistics
+echo const activeProjects = projects.filter^(p =^> p.status === "active"^);
+echo const planningProjects = projects.filter^(p =^> p.status === "planning"^);
+echo const completedProjects = projects.filter^(p =^> p.status === "completed"^);
+echo const totalTasks = projects.reduce^(^(sum, p^) =^> sum + p.tasks.length, 0^);
+echo.
+echo md += `## 📈 Quick Stats
+echo.
+echo ^| Metric ^| Count ^|
+echo ^|--------^|-------^|
+echo ^| Active Projects ^| ${activeProjects.length} ^|
+echo ^| Planning Stage ^| ${planningProjects.length} ^|
+echo ^| Completed ^| ${completedProjects.length} ^|
+echo ^| Total Open Tasks ^| ${totalTasks} ^|
+echo.
+echo ---
+echo.
+echo `;
+echo.
+echo // Active projects first
+echo if ^(activeProjects.length ^> 0^) {
+echo   md += `## 🚀 Active Projects\n\n`;
+echo   
+echo   for ^(const project of activeProjects^) {
+echo     md += `### [[${project.name}]]\n\n`;
+echo     
+echo     if ^(project.language^) {
+echo       md += `**Language:** ${project.language}  \n`;
+echo     }
+echo     
+echo     if ^(project.externalPath^) {
+echo       md += `**Path:** \`${project.externalPath}\`  \n`;
+echo     }
+echo     
+echo     md += `**Last Updated:** ${project.lastModified.toLocaleDateString^(^)}\n\n`;
+echo     
+echo     if ^(project.summary^) {
+echo       md += `${project.summary}\n\n`;
+echo     }
+echo     
+echo     if ^(project.tasks.length ^> 0^) {
+echo       md += `**Open Tasks ^(${project.tasks.length}^):**\n`;
+echo       project.tasks.slice^(0, 5^).forEach^(task =^> {
+echo         md += `- ${task}\n`;
+echo       }^);
+echo       if ^(project.tasks.length ^> 5^) {
+echo         md += `- *^(${project.tasks.length - 5} more...^)*\n`;
+echo       }
+echo       md += `\n`;
+echo     }
+echo     
+echo     md += "---\n\n";
+echo   }
+echo }
+echo.
+echo // Planning projects
+echo if ^(planningProjects.length ^> 0^) {
+echo   md += `## 📋 Planning Stage\n\n`;
+echo   
+echo   for ^(const project of planningProjects^) {
+echo     md += `### [[${project.name}]]\n\n`;
+echo     
+echo     if ^(project.language^) {
+echo       md += `**Language:** ${project.language}  \n`;
+echo     }
+echo     
+echo     if ^(project.summary^) {
+echo       md += `${project.summary}\n\n`;
+echo     }
+echo     
+echo     md += "---\n\n";
+echo   }
+echo }
+echo.
+echo // Completed projects
+echo if ^(completedProjects.length ^> 0^) {
+echo   md += `## ✅ Completed\n\n`;
+echo   
+echo   for ^(const project of completedProjects^) {
+echo     md += `- [[${project.name}]]`;
+echo     if ^(project.language^) {
+echo       md += ` ^(${project.language}^)`;
+echo     }
+echo     md += `\n`;
+echo   }
+echo   md += `\n`;
+echo }
+echo.
+echo // All projects by language
+echo md += `## 📚 By Language\n\n`;
+echo const byLanguage = new Map^<string, string[]^>^(^);
+echo.
+echo for ^(const project of projects^) {
+echo   const lang = project.language ^|^| "Unknown";
+echo   if ^(!byLanguage.has^(lang^)^) {
+echo     byLanguage.set^(lang, []^);
+echo   }
+echo   byLanguage.get^(lang^)! .push^(project.name^);
+echo }
+echo.
+echo for ^(const [lang, projectNames] of Array.from^(byLanguage.entries^(^)^).sort^(^)^) {
+echo   md += `**${lang}** ^(${projectNames.length}^): `;
+echo   md += projectNames.map^(name =^> `[[${name}]]`^).join^(", "^);
+echo   md += `\n\n`;
+echo }
+echo.
+echo md += `---
+echo.
+echo ## 🔄 Next Steps
+echo.
+echo 1. Review open tasks in active projects
+echo 2. Update project statuses as needed
+echo 3. Sync external files: Run \`RUN-sync-projects.bat\`
+echo 4. Re-generate this summary: Run \`RUN-generate-summaries.bat\`
+echo.
+echo ---
+echo.
+echo *This document is auto-generated. Do not edit manually.*
+echo `;
+echo.
+echo // Write output
 echo writeFileSync^(output, md^);
-echo console.log^("✓ Summaries written to 200 Notes/Coding Project Summaries.md"^);
+echo.
+echo log^("\n" + "=".repeat^(60^), "cyan"^);
+echo log^("✅ Summary Generated!", "green"^);
+echo log^("=".repeat^(60^), "cyan"^);
+echo log^(`\n📄 Output: ${output}`, "green"^);
+echo log^(`📊 Projects analyzed: ${projects.length}`^);
+echo log^(`✓ Active: ${activeProjects.length}`^);
+echo log^(`⏳ Planning: ${planningProjects.length}`^);
+echo log^(`✅ Completed: ${completedProjects.length}`^);
+echo log^(`📝 Total tasks: ${totalTasks}\n`^);
 ) > "%ROOT%\000 OS\AI\scripts\generate-coding-summaries.ts"
 
 :: Quick run scripts
@@ -645,7 +830,7 @@ echo Next steps:
 echo.
 echo 1. OPEN OBSIDIAN
 echo    - Create new vault
-echo    - Select D:\LifeOS
+echo    - Select %ROOT%
 echo.
 echo 2. INSTALL PLUGINS
 echo    - Dataview
