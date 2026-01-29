@@ -1,18 +1,36 @@
 {
   "projects": [
     {
-      "name": "MyApp",
-      "path": "C:\\Users\\YourName\\projects\\myapp",
+      "name": "MyWebApp",
+      "path": "C:\\Users\\YourName\\projects\\web-app",
       "files_to_sync": ["README.md", "PRD.md", "ARCHITECTURE.md", "TODO.md"],
       "language": "JavaScript",
-      "status": "active"
+      "status": "active",
+      "description": "Main web application project"
     },
     {
       "name": "DataPipeline",
       "path": "C:\\Users\\YourName\\projects\\data-pipeline",
-      "files_to_sync": ["README.md", "SPEC.md"],
+      "files_to_sync": ["README.md", "SPEC.md", "SETUP.md"],
       "language": "Python",
-      "status": "active"
+      "status": "active",
+      "description": "ETL data processing pipeline"
+    },
+    {
+      "name": "MobileApp",
+      "path": "C:\\Users\\YourName\\projects\\mobile-app",
+      "files_to_sync": ["README.md", "PRD.md", "API_DOCS.md"],
+      "language": "React Native",
+      "status": "planning",
+      "description": "Cross-platform mobile application"
+    },
+    {
+      "name": "MLModel",
+      "path": "D:\\projects\\ml-model",
+      "files_to_sync": ["README.md", "MODEL_CARD.md", "TRAINING.md"],
+      "language": "Python",
+      "status": "active",
+      "description": "Machine learning model training"
     }
   ]
 }
