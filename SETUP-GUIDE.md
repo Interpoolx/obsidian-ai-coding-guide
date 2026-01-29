@@ -18,7 +18,7 @@ Run the included batch script to create the folder structure and initial files:
 
 ## 3. Folder Structure
 The script will create the following structure:
-- `000 OS/`: System files, Claude config, templates.
+- `000 OS/`: System files, AI config, templates.
 - `100 Periodics/`: Time-based notes (Daily, Weekly, Monthly, Quarterly).
 - `199 Writing/`: Drafts and creative work.
 - `200 Notes/`: Reference and permanent notes.
@@ -37,7 +37,7 @@ At the root of your vault, you should have:
 To use this with AI (like Claude Code):
 - Keep your AI logs in `210 AI Log/`.
 - Use the prompts stored in `400 Resources/Prompt Library/`.
-- Use the automation scripts in `000 OS/Claude/scripts/`.
+- Use the automation scripts in `000 OS/AI/scripts/`.
 
 ---
 *Based on the guide by [Chase Adams](https://curiouslychase.com/posts/ai-native-obsidian-vault-setup-guide/).*

@@ -1,0 +1,18 @@
+{
+  "projects": [
+    {
+      "name": "MyApp",
+      "path": "C:\\Users\\YourName\\projects\\myapp",
+      "files_to_sync": ["README.md", "PRD.md", "ARCHITECTURE.md", "TODO.md"],
+      "language": "JavaScript",
+      "status": "active"
+    },
+    {
+      "name": "DataPipeline",
+      "path": "C:\\Users\\YourName\\projects\\data-pipeline",
+      "files_to_sync": ["README.md", "SPEC.md"],
+      "language": "Python",
+      "status": "active"
+    }
+  ]
+}

@@ -7,7 +7,7 @@ This project provides a starting point and automation for setting up an **AI-Nat
 The core idea is to treat your Obsidian vault as a holistic life operating system that is optimized for both human use and AI augmentation. It provides a structured environment for:
 - **Reflective Cadences**: Daily, weekly, monthly, and quarterly reviews.
 - **Entity Tracking**: Managing people, teams, goals, projects, and events.
-- **AI Integration**: Designed to be co-authored and analyzed by AI (like Claude Code) to provide insights, rollups, and strategic alignment.
+- **AI Integration**: Designed to be co-authored and analyzed by AI (like Claude Code or Gemini) to provide insights, rollups, and strategic alignment.
 
 ## Credits
 
